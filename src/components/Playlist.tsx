@@ -1,41 +1,107 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { addPlaylist, removePlaylist } from "@/store/librarySlice";
+import {
+  addPlaylist,
+  updatePlaylist,
+  removePlaylist,
+} from "@/store/librarySlice";
 
-const Playlist = () => {
-  const [playlist, setPlaylist] = useState<any>(null);
+const Playlist: React.FC = () => {
+  const [playlist, setPlaylist] = useState<string>("");
+  const [originalPlaylist, setOriginalPlaylist] = useState<string | null>(null);
+  const [updatedPlaylist, setUpdatedPlaylist] = useState<string>("");
+
   const library = useSelector((state: RootState) => state.library.value);
   const dispatch = useDispatch();
 
+  // ADD
   const handleAddPlaylist = () => {
-    dispatch(addPlaylist(playlist));
+    if (playlist) {
+      dispatch(addPlaylist(playlist));
+      setPlaylist("");
+    }
   };
 
-  const handleRemovePlaylist = (item: any) => {
+  // REMOVE
+  const handleRemovePlaylist = (item: string) => {
     dispatch(removePlaylist(item));
   };
 
-  return (
-    <>
-      <div>
-        <input onChange={(e) => setPlaylist(e.target.value)} type="text" />
-        <button onClick={handleAddPlaylist}>Add Playlist</button>
+  // UPDATE
+  const handleEditPlaylist = (item: string) => {
+    setOriginalPlaylist(item);
+    setUpdatedPlaylist(item);
+  };
 
-        {library && (
-          <ul>
-            {library.map((playlist, index) => (
-              <li key={index}>
-                {playlist}
-                <button onClick={() => handleRemovePlaylist(playlist)}>
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+  const handleUpdatePlaylist = () => {
+    if (
+      updatedPlaylist &&
+      originalPlaylist &&
+      originalPlaylist !== updatedPlaylist
+    ) {
+      dispatch(
+        updatePlaylist({
+          originalPlaylist: originalPlaylist,
+          updatedPlaylist: updatedPlaylist,
+        })
+      );
+      setOriginalPlaylist(null);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setOriginalPlaylist(null);
+    setUpdatedPlaylist("");
+  };
+
+  const renderEditForm = () => {
+    return (
+      <div>
+        <input
+          type="text"
+          value={updatedPlaylist}
+          onChange={(e) => setUpdatedPlaylist(e.target.value)}
+        />
+        <button onClick={handleUpdatePlaylist}>Save</button>
+        <button onClick={handleCancelEdit}>Cancel</button>
       </div>
-    </>
+    );
+  };
+
+  const renderPlaylistItem = (playlist: string, index: number) => {
+    return (
+      <li key={index}>
+        {originalPlaylist === playlist ? (
+          renderEditForm()
+        ) : (
+          <div>
+            {playlist}
+            <button onClick={() => handleEditPlaylist(playlist)}>Edit</button>
+          </div>
+        )}
+        <button onClick={() => handleRemovePlaylist(playlist)}>Remove</button>
+      </li>
+    );
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={playlist}
+        onChange={(e) => setPlaylist(e.target.value)}
+      />
+      <button onClick={handleAddPlaylist}>Add Playlist</button>
+
+      {library && (
+        <ul>
+          {library.map((playlist, index) =>
+            renderPlaylistItem(playlist, index)
+          )}
+        </ul>
+      )}
+    </div>
   );
 };
 
