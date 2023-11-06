@@ -8,7 +8,7 @@ export const Navigation = () => {
         <Link to="/">Home</Link>
       </li>
       <li>
-        <Link to="/about">About</Link>
+        <Link to="/library">Library</Link>
       </li>
     </ul>
   );
