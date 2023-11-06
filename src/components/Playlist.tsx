@@ -6,10 +6,11 @@ import {
   updatePlaylist,
   removePlaylist,
 } from "@/store/librarySlice";
+import { Playlist } from "@/@types/playlist";
 
 const Playlist: React.FC = () => {
   const [playlist, setPlaylist] = useState<string>("");
-  const [originalPlaylist, setOriginalPlaylist] = useState<string | null>(null);
+  const [originalPlaylist, setOriginalPlaylist] = useState<number | null>(null);
   const [updatedPlaylist, setUpdatedPlaylist] = useState<string>("");
 
   const library = useSelector((state: RootState) => state.library.value);
@@ -24,28 +25,22 @@ const Playlist: React.FC = () => {
   };
 
   // REMOVE
-  const handleRemovePlaylist = (item: string) => {
-    dispatch(removePlaylist(item));
+  const handleRemovePlaylist = (id: number) => {
+    dispatch(removePlaylist(id));
   };
 
   // UPDATE
-  const handleEditPlaylist = (item: string) => {
-    setOriginalPlaylist(item);
-    setUpdatedPlaylist(item);
+  const handleEditPlaylist = (id: number) => {
+    setOriginalPlaylist(id);
+    const playlistToEdit = library.find((item) => item.id === id);
+    if (playlistToEdit) {
+      setUpdatedPlaylist(playlistToEdit.name);
+    }
   };
 
   const handleUpdatePlaylist = () => {
-    if (
-      updatedPlaylist &&
-      originalPlaylist &&
-      originalPlaylist !== updatedPlaylist
-    ) {
-      dispatch(
-        updatePlaylist({
-          originalPlaylist: originalPlaylist,
-          updatedPlaylist: updatedPlaylist,
-        })
-      );
+    if (updatedPlaylist && originalPlaylist !== null) {
+      dispatch(updatePlaylist({ id: originalPlaylist, name: updatedPlaylist }));
       setOriginalPlaylist(null);
     }
   };
@@ -69,18 +64,22 @@ const Playlist: React.FC = () => {
     );
   };
 
-  const renderPlaylistItem = (playlist: string, index: number) => {
+  const renderPlaylistItem = (playlist: Playlist) => {
     return (
-      <li key={index}>
-        {originalPlaylist === playlist ? (
+      <li key={playlist.id}>
+        {originalPlaylist === playlist.id ? (
           renderEditForm()
         ) : (
           <div>
-            {playlist}
-            <button onClick={() => handleEditPlaylist(playlist)}>Edit</button>
+            {playlist.name}
+            <button onClick={() => handleEditPlaylist(playlist.id)}>
+              Edit
+            </button>
           </div>
         )}
-        <button onClick={() => handleRemovePlaylist(playlist)}>Remove</button>
+        <button onClick={() => handleRemovePlaylist(playlist.id)}>
+          Remove
+        </button>
       </li>
     );
   };
@@ -95,11 +94,7 @@ const Playlist: React.FC = () => {
       <button onClick={handleAddPlaylist}>Add Playlist</button>
 
       {library && (
-        <ul>
-          {library.map((playlist, index) =>
-            renderPlaylistItem(playlist, index)
-          )}
-        </ul>
+        <ul>{library.map((playlist) => renderPlaylistItem(playlist))}</ul>
       )}
     </div>
   );
