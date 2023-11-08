@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Playlist } from "@/@types/playlist";
 
-interface libraryState {
+interface LibraryState {
   value: Playlist[];
 }
 
 let nextPlaylistId = 0;
 
-const initialState: libraryState = {
+const initialState: LibraryState = {
   value: [],
 };
 

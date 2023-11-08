@@ -10,8 +10,10 @@ import { Playlist } from "@/@types/playlist";
 
 const Playlist: React.FC = () => {
   const [playlist, setPlaylist] = useState<string>("");
-  const [originalPlaylist, setOriginalPlaylist] = useState<number | null>(null);
-  const [updatedPlaylist, setUpdatedPlaylist] = useState<string>("");
+  const [originalPlaylistId, setOriginalPlaylistId] = useState<number | null>(
+    null
+  );
+  const [updatedPlaylistName, setUpdatedPlaylistName] = useState<string>("");
 
   const library = useSelector((state: RootState) => state.library.value);
   const dispatch = useDispatch();
@@ -30,24 +32,28 @@ const Playlist: React.FC = () => {
   };
 
   // UPDATE
+  const handleUpdatePlaylist = () => {
+    if (updatedPlaylistName && originalPlaylistId !== null) {
+      dispatch(
+        updatePlaylist({ id: originalPlaylistId, name: updatedPlaylistName })
+      );
+      setOriginalPlaylistId(null);
+    }
+  };
+
+  // EDIT
   const handleEditPlaylist = (id: number) => {
-    setOriginalPlaylist(id);
+    setOriginalPlaylistId(id);
     const playlistToEdit = library.find((item) => item.id === id);
     if (playlistToEdit) {
-      setUpdatedPlaylist(playlistToEdit.name);
+      setUpdatedPlaylistName(playlistToEdit.name);
     }
   };
 
-  const handleUpdatePlaylist = () => {
-    if (updatedPlaylist && originalPlaylist !== null) {
-      dispatch(updatePlaylist({ id: originalPlaylist, name: updatedPlaylist }));
-      setOriginalPlaylist(null);
-    }
-  };
-
+  // CANCEL
   const handleCancelEdit = () => {
-    setOriginalPlaylist(null);
-    setUpdatedPlaylist("");
+    setOriginalPlaylistId(null);
+    setUpdatedPlaylistName("");
   };
 
   const renderEditForm = () => {
@@ -55,8 +61,8 @@ const Playlist: React.FC = () => {
       <div>
         <input
           type="text"
-          value={updatedPlaylist}
-          onChange={(e) => setUpdatedPlaylist(e.target.value)}
+          value={updatedPlaylistName}
+          onChange={(e) => setUpdatedPlaylistName(e.target.value)}
         />
         <button onClick={handleUpdatePlaylist}>Save</button>
         <button onClick={handleCancelEdit}>Cancel</button>
@@ -65,18 +71,22 @@ const Playlist: React.FC = () => {
   };
 
   const renderPlaylistItem = (playlist: Playlist) => {
+    const isEditing = originalPlaylistId === playlist.id;
+    const renderContent = () => {
+      if (isEditing) {
+        return renderEditForm();
+      }
+      return (
+        <div>
+          {playlist.name}
+          <button onClick={() => handleEditPlaylist(playlist.id)}>Edit</button>
+        </div>
+      );
+    };
+
     return (
       <li key={playlist.id}>
-        {originalPlaylist === playlist.id ? (
-          renderEditForm()
-        ) : (
-          <div>
-            {playlist.name}
-            <button onClick={() => handleEditPlaylist(playlist.id)}>
-              Edit
-            </button>
-          </div>
-        )}
+        {renderContent()}
         <button onClick={() => handleRemovePlaylist(playlist.id)}>
           Remove
         </button>
