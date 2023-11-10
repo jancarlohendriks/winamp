@@ -79,18 +79,30 @@ const AudioPlayer: React.FC = () => {
                 }}
               ></td>
               <td>{millisecondsToMinutes(song.duration)}</td>
-              {/* <td>
-                <button>Play</button>
-              </td> */}
               <td>
                 <select onChange={(e) => handleAddSongToPlaylist(e, song)}>
                   <option value="">Add to playlist</option>
                   {library.map((playlist) => (
-                    <option key={playlist.id} value={playlist.id}>
+                    <option
+                      key={playlist.id}
+                      value={playlist.id}
+                      // selected={playlist.songs.some((s) => s.id === song.id)}
+                    >
                       {playlist.name}
                     </option>
                   ))}
                 </select>
+              </td>
+              <td>
+                <ul>
+                  {library
+                    .filter((playlist) =>
+                      playlist.songs.some((s) => s.id === song.id)
+                    )
+                    .map((playlist) => (
+                      <li key={playlist.id}>{playlist.name}</li>
+                    ))}
+                </ul>
               </td>
             </tr>
           ))}

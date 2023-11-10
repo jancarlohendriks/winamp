@@ -80,16 +80,6 @@ const Playlist: React.FC = () => {
       return (
         <>
           {playlist.name}
-          <ul>
-            {playlist.songs.length > 0 &&
-              playlist.songs.map((song: Song) => (
-                <li key={song.id}>
-                  <span>{song.name}</span>
-                  <span> - </span>
-                  <span>{song.artist}</span>
-                </li>
-              ))}
-          </ul>
           <button onClick={() => handleEditPlaylist(playlist.id)}>Edit</button>
         </>
       );
@@ -101,6 +91,16 @@ const Playlist: React.FC = () => {
         <button onClick={() => handleRemovePlaylist(playlist.id)}>
           Remove
         </button>
+        <ul>
+          {playlist.songs.length > 0 &&
+            playlist.songs.map((song: Song) => (
+              <li key={song.id}>
+                <span>{song.name}</span>
+                <span> - </span>
+                <span>{song.artist}</span>
+              </li>
+            ))}
+        </ul>
       </li>
     );
   };
