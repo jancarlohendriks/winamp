@@ -19,9 +19,25 @@ const librarySlice = createSlice({
     addPlaylist: addPlaylistReducer,
     updatePlaylist: updatePlaylistReducer,
     removePlaylist: removePlaylistReducer,
+    addSongToPlaylist: (state, action) => {
+      const { playlistId, song } = action.payload;
+      const playlist = state.value.find((p) => p.id == playlistId);
+      if (playlist) {
+        const songReference = {
+          id: song.id,
+          name: song.name,
+          artist: song.artist,
+        };
+        playlist.songs.push(songReference);
+      }
+    },
   },
 });
 
-export const { addPlaylist, updatePlaylist, removePlaylist } =
-  librarySlice.actions;
+export const {
+  addPlaylist,
+  updatePlaylist,
+  removePlaylist,
+  addSongToPlaylist,
+} = librarySlice.actions;
 export default librarySlice.reducer;

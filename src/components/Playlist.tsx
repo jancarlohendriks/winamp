@@ -7,6 +7,7 @@ import {
   removePlaylist,
 } from "@/store/librarySlice";
 import { Playlist } from "@/@types/playlist";
+import { Song } from "@/@types/song";
 
 const Playlist: React.FC = () => {
   const [playlist, setPlaylist] = useState<string>("");
@@ -58,7 +59,7 @@ const Playlist: React.FC = () => {
 
   const renderEditForm = () => {
     return (
-      <div>
+      <>
         <input
           type="text"
           value={updatedPlaylistName}
@@ -66,7 +67,7 @@ const Playlist: React.FC = () => {
         />
         <button onClick={handleUpdatePlaylist}>Save</button>
         <button onClick={handleCancelEdit}>Cancel</button>
-      </div>
+      </>
     );
   };
 
@@ -77,10 +78,20 @@ const Playlist: React.FC = () => {
         return renderEditForm();
       }
       return (
-        <div>
+        <>
           {playlist.name}
+          <ul>
+            {playlist.songs.length > 0 &&
+              playlist.songs.map((song: Song) => (
+                <li key={song.id}>
+                  <span>{song.name}</span>
+                  <span> - </span>
+                  <span>{song.artist}</span>
+                </li>
+              ))}
+          </ul>
           <button onClick={() => handleEditPlaylist(playlist.id)}>Edit</button>
-        </div>
+        </>
       );
     };
 

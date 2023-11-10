@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Song } from "@/@types/song";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { addSongToPlaylist } from "@/store/librarySlice";
 import useDebounce from "@/hooks/useDebounce";
 import useFetch from "@/hooks/useFetch";
 import millisecondsToMinutes from "@/lib/millisecondsToMinutes";
@@ -11,6 +12,7 @@ const AudioPlayer: React.FC = () => {
   const [search, setSearch] = useState<string>("");
 
   const library = useSelector((state: RootState) => state.library.value);
+  const dispatch = useDispatch();
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -30,6 +32,16 @@ const AudioPlayer: React.FC = () => {
   const highlightText = (text: string, searchTerm: string) => {
     const regex = new RegExp(`(${searchTerm})`, "gi");
     return text.replace(regex, "<span class='highlighted'>$1</span>");
+  };
+
+  const handleAddSongToPlaylist = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    song: Song
+  ) => {
+    const playlistId = e.target.value;
+    if (playlistId) {
+      dispatch(addSongToPlaylist({ playlistId, song }));
+    }
   };
 
   return (
@@ -67,14 +79,14 @@ const AudioPlayer: React.FC = () => {
                 }}
               ></td>
               <td>{millisecondsToMinutes(song.duration)}</td>
-              <td>
+              {/* <td>
                 <button>Play</button>
-              </td>
+              </td> */}
               <td>
-                <select>
-                  <option value="Select playlist">Add to playlist</option>
+                <select onChange={(e) => handleAddSongToPlaylist(e, song)}>
+                  <option value="">Add to playlist</option>
                   {library.map((playlist) => (
-                    <option key={playlist.id} value={playlist.name}>
+                    <option key={playlist.id} value={playlist.id}>
                       {playlist.name}
                     </option>
                   ))}

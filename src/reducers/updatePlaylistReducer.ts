@@ -1,5 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { LibraryState } from "@/@types/libraryState";
+import { LibraryState } from "@/store/librarySlice";
 
 const updatePlaylistReducer = (
   state: LibraryState,
