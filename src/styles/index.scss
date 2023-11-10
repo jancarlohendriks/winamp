@@ -1,5 +1,5 @@
 :root {
-  --bg-color: black;
+  --bg-color: #242424;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -64,4 +64,17 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+table {
+  width: 100%;
+
+  th {
+    text-align: left;
+  }
+}
+
+.highlighted {
+  background-color: red;
+  font-weight: bold;
 }

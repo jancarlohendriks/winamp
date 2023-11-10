@@ -1,10 +1,10 @@
 import { DefaultLayout } from "@/layouts/DefaultLayout";
-import styles from "./Library.module.scss";
+import Playlist from "@/components/Playlist";
 
 function Library() {
   return (
     <DefaultLayout>
-      <div className={styles.root}>Library</div>
+      <Playlist />
     </DefaultLayout>
   );
 }
