@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { Song } from "@/@types/song";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { addSongToPlaylist } from "@/store/librarySlice";
+import {
+  addSongToPlaylist,
+  removeSongFromPlaylist,
+} from "@/store/librarySlice";
 import useDebounce from "@/hooks/useDebounce";
 import useFetch from "@/hooks/useFetch";
 import millisecondsToMinutes from "@/lib/millisecondsToMinutes";
@@ -38,10 +41,12 @@ const AudioPlayer: React.FC = () => {
     e: React.ChangeEvent<HTMLSelectElement>,
     song: Song
   ) => {
-    const playlistId = e.target.value;
-    if (playlistId) {
-      dispatch(addSongToPlaylist({ playlistId, song }));
-    }
+    const playlistId = Number(e.target.value);
+    dispatch(addSongToPlaylist({ playlistId, song }));
+  };
+
+  const handleRemoveSongFromPlaylist = (playlistId: number, songId: number) => {
+    dispatch(removeSongFromPlaylist({ playlistId, songId }));
   };
 
   return (
@@ -100,7 +105,14 @@ const AudioPlayer: React.FC = () => {
                       playlist.songs.some((s) => s.id === song.id)
                     )
                     .map((playlist) => (
-                      <li key={playlist.id}>{playlist.name}</li>
+                      <li
+                        onClick={() =>
+                          handleRemoveSongFromPlaylist(playlist.id, song.id)
+                        }
+                        key={playlist.id}
+                      >
+                        {playlist.name}
+                      </li>
                     ))}
                 </ul>
               </td>

@@ -4,6 +4,7 @@ import addPlaylistReducer from "@/reducers/addPlaylistReducer";
 import updatePlaylistReducer from "@/reducers/updatePlaylistReducer";
 import removePlaylistReducer from "@/reducers/removePlaylistReducer";
 import addSongToPlaylistReducer from "@/reducers/addSongToPlaylist";
+import removeSongFromPlaylistReducer from "@/reducers/removeSongFromPlaylist";
 
 export interface LibraryState {
   value: Playlist[];
@@ -21,6 +22,7 @@ const librarySlice = createSlice({
     updatePlaylist: updatePlaylistReducer,
     removePlaylist: removePlaylistReducer,
     addSongToPlaylist: addSongToPlaylistReducer,
+    removeSongFromPlaylist: removeSongFromPlaylistReducer,
   },
 });
 
@@ -29,5 +31,6 @@ export const {
   updatePlaylist,
   removePlaylist,
   addSongToPlaylist,
+  removeSongFromPlaylist,
 } = librarySlice.actions;
 export default librarySlice.reducer;

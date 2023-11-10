@@ -5,6 +5,7 @@ import {
   addPlaylist,
   updatePlaylist,
   removePlaylist,
+  removeSongFromPlaylist,
 } from "@/store/librarySlice";
 import { Playlist } from "@/@types/playlist";
 import { Song } from "@/@types/song";
@@ -57,6 +58,10 @@ const Playlist: React.FC = () => {
     setUpdatedPlaylistName("");
   };
 
+  const handleRemoveSongFromPlaylist = (playlistId: number, songId: number) => {
+    dispatch(removeSongFromPlaylist({ playlistId, songId }));
+  };
+
   const renderEditForm = () => {
     return (
       <>
@@ -98,6 +103,13 @@ const Playlist: React.FC = () => {
                 <span>{song.name}</span>
                 <span> - </span>
                 <span>{song.artist}</span>
+                <button
+                  onClick={() =>
+                    handleRemoveSongFromPlaylist(playlist.id, song.id)
+                  }
+                >
+                  Remove
+                </button>
               </li>
             ))}
         </ul>
