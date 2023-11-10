@@ -1,11 +1,12 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { Playlist } from "@/@types/playlist";
+import addPlaylistReducer from "@/reducers/addPlaylistReducer";
+import updatePlaylistReducer from "@/reducers/updatePlaylistReducer";
+import removePlaylistReducer from "@/reducers/removePlaylistReducer";
 
-interface LibraryState {
+export interface LibraryState {
   value: Playlist[];
 }
-
-let nextPlaylistId = 0;
 
 const initialState: LibraryState = {
   value: [],
@@ -15,29 +16,9 @@ const librarySlice = createSlice({
   name: "library",
   initialState,
   reducers: {
-    addPlaylist: (state, action: PayloadAction<string>) => {
-      state.value.push({
-        id: nextPlaylistId++,
-        name: action.payload,
-      });
-    },
-    updatePlaylist: (
-      state,
-      action: PayloadAction<{ id: number; name: string }>
-    ) => {
-      const { id, name } = action.payload;
-      const playlistToUpdate = state.value.find(
-        (playlist) => playlist.id === id
-      );
-
-      if (playlistToUpdate) {
-        playlistToUpdate.name = name;
-      }
-    },
-    removePlaylist: (state, action: PayloadAction<number>) => {
-      const id = action.payload;
-      state.value = state.value.filter((playlist) => playlist.id !== id);
-    },
+    addPlaylist: addPlaylistReducer,
+    updatePlaylist: updatePlaylistReducer,
+    removePlaylist: removePlaylistReducer,
   },
 });
 
