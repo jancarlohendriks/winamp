@@ -8,13 +8,18 @@ const addSongToPlaylistReducer = (
 ) => {
   const { playlistId, song } = action.payload;
   const playlist = state.value.find((p) => p.id == playlistId);
+
   if (playlist) {
-    const songReference = {
-      id: song.id,
-      name: song.name,
-      artist: song.artist,
-    };
-    playlist.songs.push(songReference);
+    const isSongInPlaylist = playlist.songs.some((s) => s.id === song.id);
+
+    if (!isSongInPlaylist) {
+      const songReference = {
+        id: song.id,
+        name: song.name,
+        artist: song.artist,
+      };
+      playlist.songs.push(songReference);
+    }
   }
 };
 

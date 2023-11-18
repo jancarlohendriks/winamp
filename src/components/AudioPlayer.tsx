@@ -56,7 +56,6 @@ const AudioPlayer: React.FC = () => {
         placeholder="Search"
         onChange={(e) => setSearch(e.target.value)}
       />
-      {/* TODO: Move Now Playing to navigation */}
       <h2>Now playing: "Selected"</h2>
       <table>
         <thead>
@@ -66,6 +65,8 @@ const AudioPlayer: React.FC = () => {
             <th>Album</th>
             <th>Artist</th>
             <th>Duration</th>
+            <th></th>
+            <th>Playlist</th>
           </tr>
         </thead>
         <tbody>
